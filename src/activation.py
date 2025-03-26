@@ -96,6 +96,7 @@ class Softmax(Activation):
         return "Softmax"
 
 # Bonus activation functions number 2
+# https://medium.com/analytics-vidhya/activation-function-c762b22fd4da
 class LeakyReLU(Activation):
     def __init__(self, alpha=0.01):
         self.alpha = alpha

@@ -44,6 +44,7 @@ class NormalInitializer(Initializer):
 # Bonus initialization methods bagian 3
 class XavierInitializer(Initializer):
     # limit = sqrt(6 / (fan_in + fan_out)), weights = U(-limit, limit)
+    # https://www.geeksforgeeks.org/xavier-initialization/
     def __init__(self, seed=None):
         self.seed = seed
 
