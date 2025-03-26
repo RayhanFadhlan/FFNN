@@ -1,10 +1,9 @@
-
 PYTHON := python3
 VENV := venv
 PIP := $(VENV)/bin/pip
 PYTHON_VENV := $(VENV)/bin/python
 
-.PHONY: all setup install run clean
+.PHONY: all setup install run clean cleanall
 
 all: setup install
 
@@ -16,6 +15,7 @@ setup:
 install: setup
 	@echo "Installing required packages..."
 	$(PIP) install --upgrade pip
+	$(PIP) install numpy matplotlib scikit-learn tqdm networkx seaborn
 	$(PIP) install numpy matplotlib scikit-learn tqdm
 	@echo "Packages installed successfully"
 

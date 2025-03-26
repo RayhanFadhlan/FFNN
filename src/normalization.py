@@ -20,6 +20,8 @@ class NoNormalization(Normalization):
     def __str__(self):
         return "NoNormalization"
 
+# Bonus point 5
+# TODO: coba cek lagi juga
 class RMSNorm(Normalization):
     # https://dl.acm.org/doi/pdf/10.5555/3454287.3455397
     # https://drive.google.com/file/d/1vdkQhdWBFzmp8B9EOP6YDLq2DSYwhI0y/view?usp=sharing
@@ -27,7 +29,7 @@ class RMSNorm(Normalization):
         self.epsilon = epsilon
         self.cached_rms = None
 
-        # y = x / sqrt(1/n * sum(x^2) + epsilon)
+    # y = x / sqrt(1/n * sum(x^2) + epsilon)
     def forward(self, x):
         self.cached_rms = np.sqrt(np.mean(np.square(x), axis=1, keepdims=True) + self.epsilon)
         return x / self.cached_rms
@@ -35,7 +37,8 @@ class RMSNorm(Normalization):
     def backward(self, x, grad_output):
         n_features = x.shape[1]
         rms_squared = np.square(self.cached_rms)
-        # dx 1/rms
+
+        # dx = grad_output / rms
         dx = grad_output / self.cached_rms
 
         # 1/ (n * rms^2) * (sum(x))

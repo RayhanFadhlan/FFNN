@@ -22,7 +22,7 @@ class NoRegularizer(Regularizer):
     def __str__(self):
         return "NoRegularizer"
 
-
+# Bonus point 4
 # https://www.geeksforgeeks.org/regularization-in-machine-learning/
 class L1Regularizer(Regularizer):
     def __init__(self, lambda_param=0.01):
@@ -46,7 +46,7 @@ class L2Regularizer(Regularizer):
 
     def loss(self, weights):
         # lambda * sum(weights^2)
-        return  self.lambda_param * np.sum(np.square(weights))
+        return self.lambda_param * np.sum(np.square(weights))
 
     def gradient(self, weights):
         # 2 * lambda * weights
