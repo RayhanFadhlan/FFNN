@@ -108,3 +108,6 @@ class Layer:
 
         self.weights -= learning_rate * weight_update
         self.biases -= learning_rate * bias_update
+
+    def get_weights(self):
+        return self.weights, self.biases
