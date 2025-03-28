@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from sklearn.datasets import fetch_openml
 from sklearn.metrics import accuracy_score
@@ -80,3 +82,44 @@ def load_mnist_data(subset_size=None):
     print(f"Test data: X_test: {X_test.shape}, y_test: {y_test.shape}")
 
     return X_train, X_test, y_train, y_test, y_train_onehot, y_test_onehot
+
+
+def train_and_evaluate(
+    model,
+    X_train,
+    X_test,
+    y_train_onehot,
+    y_test,
+    y_test_onehot,
+    epochs=10,
+    batch_size=32,
+    learning_rate=0.01,
+    model_name="Model",
+):
+    """
+    Train and evaluate a model, returning its history and accuracy
+    """
+    print(f"\nTraining {model_name}...")
+    start_time = time.time()
+
+    history = model.fit(
+        X_train,
+        y_train_onehot,
+        batch_size=batch_size,
+        learning_rate=learning_rate,
+        epochs=epochs,
+        validation_data=(X_test, y_test_onehot),
+        verbose=1,
+    )
+
+    training_time = time.time() - start_time
+    print(f"Training took {training_time:.2f} seconds")
+
+    # Make predictions and calculate accuracy
+    y_pred = model.predict(X_test)
+    y_pred_classes = np.argmax(y_pred, axis=1)
+    accuracy = accuracy_score(y_test, y_pred_classes)
+
+    print(f"{model_name} accuracy: {accuracy:.4f}")
+
+    return history, accuracy, training_time, model
