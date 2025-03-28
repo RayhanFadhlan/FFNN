@@ -178,109 +178,67 @@ def plot_simplified_model_graph(model, save_path=None, max_nodes_per_layer=10):
     plt.show()
 
 def plot_weight_distributions(model, layers_to_plot=None, save_path=None):
+
     if layers_to_plot is None:
-        layers_to_plot = list(range(len(model.layers)))
-
+        layers_to_plot = range(len(model.layers))
+    else:
+        # Convert string indices to integers if needed
+        layers_to_plot = [int(idx) if isinstance(idx, str) else idx for idx in layers_to_plot]
+        
     n_layers = len(layers_to_plot)
-
-    n_cols = min(3, n_layers)
-    n_rows = (n_layers + n_cols - 1) // n_cols
-
-    plt.figure(figsize=(15, 5 * n_rows))
-
-    for i, layer_idx in enumerate(layers_to_plot):
-        if layer_idx >= len(model.layers):
+    
+    plt.figure(figsize=(12, 5))
+    plt.suptitle('Weight Distributions Across Layers', fontsize=16)
+    
+    for i, layer_idx in enumerate(layers_to_plot, 1):
+        if not isinstance(layer_idx, (int, np.integer)) or layer_idx >= len(model.layers):
             continue
-
-        weights, biases = model.layers[layer_idx].get_weights()
-
-        flat_weights = weights.flatten()
-
-        plt.subplot(n_rows, n_cols, i + 1)
-
-        sns.histplot(flat_weights, kde=True)
-
-        plt.title(f"Layer {layer_idx} Weight Distribution")
-        plt.xlabel("Weight Value")
-        plt.ylabel("Frequency")
-
-        stats_text = f"Mean: {np.mean(flat_weights):.4f}\n" \
-                    f"Std: {np.std(flat_weights):.4f}\n" \
-                    f"Min: {np.min(flat_weights):.4f}\n" \
-                    f"Max: {np.max(flat_weights):.4f}"
-
-        plt.annotate(stats_text, xy=(0.05, 0.95), xycoords='axes fraction',
-                    verticalalignment='top', horizontalalignment='left',
-                    bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.8))
-
+            
+        plt.subplot(1, n_layers, i)
+        weights = model.layers[layer_idx].weights.flatten()
+        plt.hist(weights, bins=50, alpha=0.7)
+        plt.title(f'Layer {layer_idx + 1}')
+        plt.xlabel('Weight Value')
+        plt.ylabel('Frequency')
+        
     plt.tight_layout()
+    plt.subplots_adjust(top=0.85)
 
     if save_path:
         plt.savefig(save_path)
-
+        
     plt.show()
 
 def plot_gradient_distributions(model, layers_to_plot=None, save_path=None):
+
     if layers_to_plot is None:
-        layers_to_plot = list(range(len(model.layers)))
-
+        layers_to_plot = range(len(model.layers))
+    else:
+        # Convert string indices to integers if needed
+        layers_to_plot = [int(idx) if isinstance(idx, str) else idx for idx in layers_to_plot]
+        
     n_layers = len(layers_to_plot)
-
-    n_cols = min(3, n_layers)
-    n_rows = (n_layers + n_cols - 1) // n_cols
-
-    plt.figure(figsize=(15, 5 * n_rows))
-
-    for i, layer_idx in enumerate(layers_to_plot):
-        if layer_idx >= len(model.layers):
+    
+    plt.figure(figsize=(12, 5))
+    plt.suptitle('Gradient Distributions Across Layers', fontsize=16)
+    
+    for i, layer_idx in enumerate(layers_to_plot, 1):
+        if not isinstance(layer_idx, (int, np.integer)) or layer_idx >= len(model.layers):
             continue
-
-        weight_grads, bias_grads = model.layers[layer_idx].get_gradients()
-
-        flat_grads = weight_grads.flatten()
-
-        plt.subplot(n_rows, n_cols, i + 1)
-
-        sns.histplot(flat_grads, kde=True)
-
-        plt.title(f"Layer {layer_idx} Gradient Distribution")
-        plt.xlabel("Gradient Value")
-        plt.ylabel("Frequency")
-
-        stats_text = f"Mean: {np.mean(flat_grads):.4f}\n" \
-                    f"Std: {np.std(flat_grads):.4f}\n" \
-                    f"Min: {np.min(flat_grads):.4f}\n" \
-                    f"Max: {np.max(flat_grads):.4f}"
-
-        plt.annotate(stats_text, xy=(0.05, 0.95), xycoords='axes fraction',
-                    verticalalignment='top', horizontalalignment='left',
-                    bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.8))
-
+            
+        plt.subplot(1, n_layers, i)
+        gradients = model.layers[layer_idx].weights_grad.flatten()
+        plt.hist(gradients, bins=50, alpha=0.7)
+        plt.title(f'Layer {layer_idx + 1}')
+        plt.xlabel('Gradient Value')
+        plt.ylabel('Frequency')
+        
     plt.tight_layout()
+    plt.subplots_adjust(top=0.85)
 
     if save_path:
         plt.savefig(save_path)
-
-    plt.show()
-
-def plot_learning_curves(history, save_path=None):
-    plt.figure(figsize=(10, 6))
-    epochs = range(1, len(history['loss']) + 1)
-
-    plt.plot(epochs, history['loss'], 'b', label='Training loss')
-    if 'val_loss' in history and len(history['val_loss']) > 0:
-        plt.plot(epochs, history['val_loss'], 'r', label='Validation loss')
-
-    plt.title('Learning Curves')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.legend()
-
-    plt.grid(True, linestyle='--', alpha=0.7)
-
-    if save_path:
-        plt.savefig(save_path)
-
+        
     plt.show()
 
 def plot_prediction_comparison(y_true, y_pred, y_sklearn=None, save_path=None):

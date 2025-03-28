@@ -111,3 +111,6 @@ class Layer:
 
     def get_weights(self):
         return self.weights, self.biases
+    
+    def get_gradients(self):
+        return self.weights_grad, self.biases_grad
