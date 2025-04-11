@@ -19,10 +19,6 @@ install: setup
 	$(PIP) install numpy matplotlib scikit-learn tqdm
 	@echo "Packages installed successfully"
 
-run: setup
-	@echo "Running example..."
-	$(PYTHON_VENV) example.py
-
 clean:
 	@echo "Cleaning up..."
 	rm -rf __pycache__

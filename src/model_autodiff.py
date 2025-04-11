@@ -21,10 +21,7 @@ class FFNNAutodiff:
 
             autodiff_activations = []
             for act in activations:
-                if isinstance(act, Softmax):
-                    from autodiff import AutoDiffSoftmax
-                    autodiff_activations.append(AutoDiffSoftmax())
-                elif not isinstance(act, AutoDiffActivation):
+                if not isinstance(act, AutoDiffActivation):
                     autodiff_activations.append(AutoDiffActivation(act))
                 else:
                     autodiff_activations.append(act)
@@ -123,6 +120,30 @@ class FFNNAutodiff:
         except Exception as e:
             print(f"Error loading model: {e}")
             return None
+
+    def visualize_model(self, simplified=False, save_path=None):
+        try:
+            from visualization import plot_simplified_model_graph, plot_model_graph
+            if simplified:
+                plot_simplified_model_graph(self, save_path)
+            else:
+                plot_model_graph(self, save_path)
+        except ImportError:
+            print("Visualization module not available. Cannot visualize model.")
+
+    def visualize_weight_distributions(self, layers_to_plot=None, save_path=None):
+        try:
+            from visualization import plot_weight_distributions
+            plot_weight_distributions(self, layers_to_plot, save_path)
+        except ImportError:
+            print("Visualization module not available. Cannot visualize weight distributions.")
+
+    def visualize_gradient_distributions(self, layers_to_plot=None, save_path=None):
+        try:
+            from visualization import plot_gradient_distributions
+            plot_gradient_distributions(self, layers_to_plot, save_path)
+        except ImportError:
+            print("Visualization module not available. Cannot visualize gradient distributions.")
 
     def visualize_learning_curves(self, history, save_path=None):
         try:
